@@ -1,48 +1,49 @@
 
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-interface EditorContextProps {
+// Define the type for a content block
+type ContentBlock = {
+  id: string;
+  type: string;
+  content: any;
+};
+
+// Define the type for the context
+type EditorContextType = {
+  editorContent: ContentBlock[];
+  setEditorContent: React.Dispatch<React.SetStateAction<ContentBlock[]>>;
   isSidebarCollapsed: boolean;
   setIsSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-  activeBlock: string | null;
-  setActiveBlock: React.Dispatch<React.SetStateAction<string | null>>;
-  editorContent: any[];
-  setEditorContent: React.Dispatch<React.SetStateAction<any[]>>;
-}
+  isPageSidebarOpen: boolean;
+  setIsPageSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const EditorContext = createContext<EditorContextProps | undefined>(undefined);
+// Create the context
+const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
-export const useEditor = (): EditorContextProps => {
+// Create a provider component
+export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [editorContent, setEditorContent] = useState<ContentBlock[]>([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isPageSidebarOpen, setIsPageSidebarOpen] = useState(false);
+
+  const value = {
+    editorContent,
+    setEditorContent,
+    isSidebarCollapsed,
+    setIsSidebarCollapsed,
+    isPageSidebarOpen,
+    setIsPageSidebarOpen,
+  };
+
+  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
+};
+
+// Create a hook to use the context
+export const useEditor = () => {
   const context = useContext(EditorContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useEditor must be used within an EditorProvider');
   }
   return context;
-};
-
-export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [activeBlock, setActiveBlock] = useState<string | null>(null);
-  const [editorContent, setEditorContent] = useState<any[]>([
-    {
-      type: 'paragraph',
-      id: '1',
-      content: 'Welcome to TipTap Editor! Try adding blocks from the sidebar.'
-    }
-  ]);
-
-  return (
-    <EditorContext.Provider
-      value={{
-        isSidebarCollapsed,
-        setIsSidebarCollapsed,
-        activeBlock,
-        setActiveBlock,
-        editorContent,
-        setEditorContent
-      }}
-    >
-      {children}
-    </EditorContext.Provider>
-  );
 };

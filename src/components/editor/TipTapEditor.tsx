@@ -6,6 +6,7 @@ import { Sidebar } from './Sidebar';
 import { Toolbar } from './Toolbar';
 import { EditorContent } from './EditorContent';
 import { EditorProvider } from '@/contexts/EditorContext';
+import { PageFormSidebar } from './PageFormSidebar';
 
 export const TipTapEditor: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const TipTapEditor: React.FC = () => {
               <EditorContent />
             </div>
           </div>
+          <PageFormSidebar />
         </div>
       </DndProvider>
     </EditorProvider>
