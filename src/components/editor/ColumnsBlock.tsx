@@ -24,6 +24,20 @@ export const ColumnsBlock: React.FC<ColumnsBlockProps> = ({ block }) => {
   
   const columnCount = block.columns.length;
   
+  // Create the appropriate grid class based on column count
+  const getGridClass = () => {
+    switch (columnCount) {
+      case 2:
+        return 'grid-cols-2';
+      case 3:
+        return 'grid-cols-3';
+      case 4:
+        return 'grid-cols-4';
+      default:
+        return 'grid-cols-1';
+    }
+  };
+  
   return (
     <div 
       className={cn(
@@ -35,7 +49,7 @@ export const ColumnsBlock: React.FC<ColumnsBlockProps> = ({ block }) => {
         setActiveBlock(block.id);
       }}
     >
-      <div className={`grid grid-cols-${columnCount} gap-4`}>
+      <div className={`grid ${getGridClass()} gap-4`}>
         {block.columns.map((column) => (
           <div key={column.id} className="min-h-[100px]">
             {column.content.length > 0 ? (
