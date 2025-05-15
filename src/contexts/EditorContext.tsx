@@ -5,7 +5,8 @@ import React, { createContext, useContext, useState } from 'react';
 type ContentBlock = {
   id: string;
   type: string;
-  content: any;
+  content?: any;
+  columns?: { id: string; content: any[] }[];
 };
 
 // Define the type for the context
@@ -16,6 +17,8 @@ type EditorContextType = {
   setIsSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   isPageSidebarOpen: boolean;
   setIsPageSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  activeBlock: string | null;
+  setActiveBlock: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 // Create the context
@@ -26,6 +29,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [editorContent, setEditorContent] = useState<ContentBlock[]>([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isPageSidebarOpen, setIsPageSidebarOpen] = useState(false);
+  const [activeBlock, setActiveBlock] = useState<string | null>(null);
 
   const value = {
     editorContent,
@@ -34,6 +38,8 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsSidebarCollapsed,
     isPageSidebarOpen,
     setIsPageSidebarOpen,
+    activeBlock,
+    setActiveBlock,
   };
 
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;

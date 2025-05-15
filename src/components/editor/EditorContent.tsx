@@ -54,8 +54,8 @@ export const EditorContent: React.FC = () => {
       ) : (
         <div className="max-w-4xl mx-auto">
           {editorContent.map((block) => (
-            block.type === 'columns' ? (
-              <ColumnsBlock key={block.id} block={block} />
+            block.type === 'columns' && block.columns ? (
+              <ColumnsBlock key={block.id} block={block as any} />
             ) : (
               <ContentBlock key={block.id} block={block} />
             )

@@ -59,7 +59,7 @@ export const BlockSuggestions: React.FC<BlockSuggestionsProps> = ({ onClose, col
     if (columnId) {
       // Add block to a specific column
       const updatedContent = editorContent.map(block => {
-        if (block.type === 'columns') {
+        if (block.type === 'columns' && block.columns) {
           return {
             ...block,
             columns: block.columns.map(column => {

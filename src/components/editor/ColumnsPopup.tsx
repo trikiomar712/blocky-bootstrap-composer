@@ -17,7 +17,8 @@ export const ColumnsPopup: React.FC = () => {
       }))
     };
     
-    setEditorContent([...editorContent, newColumnBlock]);
+    // Add the new column block to editor content
+    setEditorContent([...editorContent, newColumnBlock as any]);
   };
   
   return (
