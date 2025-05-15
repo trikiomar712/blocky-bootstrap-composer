@@ -7,7 +7,7 @@ interface ContentBlockProps {
   block: {
     id: string;
     type: string;
-    content: any;
+    content?: any; // Making content optional
   };
 }
 
@@ -16,17 +16,20 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ block }) => {
   const isActive = activeBlock === block.id;
   
   const renderContent = () => {
+    // If content is undefined, provide a default value based on type
+    const content = block.content ?? getDefaultContentForType(block.type);
+    
     switch (block.type) {
       case 'paragraph':
-        return <p className="mb-4">{block.content}</p>;
+        return <p className="mb-4">{content}</p>;
       case 'heading':
-        return <h2 className="text-2xl font-bold mb-4">{block.content}</h2>;
+        return <h2 className="text-2xl font-bold mb-4">{content}</h2>;
       case 'image':
         return (
           <div className="mb-4">
             <img 
-              src={block.content.src} 
-              alt={block.content.alt} 
+              src={content?.src ?? '/placeholder.svg'} 
+              alt={content?.alt ?? 'Image'} 
               className="max-w-full h-auto rounded"
             />
           </div>
@@ -34,25 +37,45 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ block }) => {
       case 'list':
         return (
           <ul className="list-disc pl-6 mb-4">
-            {Array.isArray(block.content) && block.content.map((item, index) => (
+            {Array.isArray(content) ? content.map((item, index) => (
               <li key={index}>{item}</li>
-            ))}
+            )) : <li>Empty list</li>}
           </ul>
         );
       case 'code':
         return (
           <pre className="bg-gray-100 p-3 rounded mb-4 font-mono text-sm whitespace-pre-wrap">
-            {block.content}
+            {content}
           </pre>
         );
       case 'quote':
         return (
           <blockquote className="border-l-4 border-gray-300 pl-4 italic mb-4">
-            {block.content}
+            {content}
           </blockquote>
         );
       default:
-        return <p className="mb-4">{String(block.content)}</p>;
+        return <p className="mb-4">{String(content || '')}</p>;
+    }
+  };
+  
+  // Helper function to provide default content based on block type
+  const getDefaultContentForType = (type: string) => {
+    switch (type) {
+      case 'paragraph':
+        return 'Empty paragraph';
+      case 'heading':
+        return 'Untitled';
+      case 'image':
+        return { src: '/placeholder.svg', alt: 'Placeholder image' };
+      case 'list':
+        return ['Empty list item'];
+      case 'code':
+        return '// Empty code block';
+      case 'quote':
+        return 'Empty quote';
+      default:
+        return '';
     }
   };
   
